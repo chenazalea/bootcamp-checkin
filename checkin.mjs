@@ -11,12 +11,24 @@ function run(command) {
   }
 }
 
+// Parses JSON a command printed, or returns null if it failed or wasn't JSON.
+function runJson(command) {
+  const out = run(command);
+  if (out === null) return null;
+  try {
+    return JSON.parse(out);
+  } catch {
+    return null;
+  }
+}
+
 const payload = {
   node: process.version,
   git: run('git --version'),
   claude: run('claude --version'),
   repo: run('git remote get-url origin'),
   commit: run('git rev-parse HEAD'),
+  myApp: runJson('my-first-app hello --json'),
   machine: {
     os: `${os.type()} ${os.release()} (${os.platform()} ${os.arch()})`,
     cpus: os.cpus().length,
